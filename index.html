@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Result</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--text:#f8fbff;--muted:#9aa9c2;--line:rgba(255,255,255,.11);--panel:rgba(9,15,32,.72);--cyan:#35e8ff;--violet:#8b5cf6;--pink:#ec4899}
+html,body{min-height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text)}
+body{overflow-x:hidden;background:#030712;perspective:1400px}
+body:before{content:"";position:fixed;inset:-20%;background:radial-gradient(circle at 20% 20%,rgba(59,130,246,.20),transparent 25%),radial-gradient(circle at 80% 70%,rgba(168,85,247,.18),transparent 28%),radial-gradient(circle at 50% 100%,rgba(34,211,238,.13),transparent 25%);animation:aurora 10s ease-in-out infinite alternate;pointer-events:none}
+@keyframes aurora{to{transform:scale(1.08) rotate(4deg);filter:hue-rotate(18deg)}}
+.page{position:relative;min-height:100vh;padding:28px 16px 60px;display:flex;justify-content:center}
+.scene{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.grid{position:absolute;width:150%;height:65%;left:-25%;bottom:-28%;background-image:linear-gradient(rgba(83,110,180,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(83,110,180,.12) 1px,transparent 1px);background-size:54px 54px;transform:perspective(500px) rotateX(63deg);mask-image:linear-gradient(to top,black,transparent 80%);animation:gridMove 8s linear infinite}
+@keyframes gridMove{to{background-position:0 54px,54px 0}}
+.orb{position:absolute;border-radius:50%;filter:blur(1px);box-shadow:0 0 50px currentColor;opacity:.55;animation:float 7s ease-in-out infinite}
+.orb.a{width:100px;height:100px;background:#22d3ee;color:#22d3ee;left:7%;top:18%}.orb.b{width:70px;height:70px;background:#8b5cf6;color:#8b5cf6;right:10%;top:25%;animation-delay:-2s}.orb.c{width:46px;height:46px;background:#ec4899;color:#ec4899;left:15%;bottom:17%;animation-delay:-4s}
+@keyframes float{50%{transform:translate3d(0,-35px,60px) scale(1.12)}}
+.wrap{width:min(1040px,100%);position:relative;z-index:2}
+.top{text-align:center;margin-bottom:24px;animation:drop .8s cubic-bezier(.2,.8,.2,1)}
+@keyframes drop{from{opacity:0;transform:translateY(-25px) rotateX(35deg)}to{opacity:1;transform:none}}
+.top h1{font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.05em;line-height:1;font-weight:900;text-shadow:0 10px 35px rgba(0,0,0,.45)}
+.top h1 span{background:linear-gradient(100deg,#fff 15%,#61e7ff 45%,#b88cff 75%,#fff);background-size:220%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:220%}}
+.stage{position:relative;transform-style:preserve-3d}
+.stage:before{content:"";position:absolute;inset:18px -10px -18px;background:linear-gradient(120deg,rgba(53,232,255,.15),rgba(139,92,246,.13));filter:blur(35px);transform:translateZ(-70px);border-radius:40px}
+.card{position:relative;background:linear-gradient(145deg,rgba(18,28,54,.82),rgba(5,10,24,.72));border:1px solid var(--line);border-radius:30px;padding:26px;box-shadow:0 35px 90px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.10);backdrop-filter:blur(22px);transform-style:preserve-3d;transition:transform .18s ease,box-shadow .18s ease;will-change:transform}
+.card:after{content:"";position:absolute;inset:0;border-radius:30px;padding:1px;background:linear-gradient(120deg,rgba(53,232,255,.55),transparent 30%,rgba(139,92,246,.5),transparent 70%,rgba(236,72,153,.35));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.card-head{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:22px;transform:translateZ(35px)}
+.card-head h2{font-size:1.15rem}.chip{font-size:.75rem;color:#c9faff;padding:8px 12px;border:1px solid rgba(53,232,255,.22);background:rgba(53,232,255,.08);border-radius:999px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;transform:translateZ(24px)}
+.field label{display:block;color:var(--muted);font-size:.8rem;margin:0 0 8px 4px}.field input{width:100%;padding:14px 15px;border-radius:15px;border:1px solid var(--line);outline:none;background:rgba(255,255,255,.055);color:white;font-size:1rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);transition:.25s}
+.field input:focus{border-color:rgba(53,232,255,.6);box-shadow:0 0 0 4px rgba(53,232,255,.08),0 0 30px rgba(53,232,255,.08);transform:translateZ(8px)}
+.subjects{margin-top:18px;display:grid;gap:11px;transform:translateZ(20px)}
+.subject-row{display:grid;grid-template-columns:1fr 170px;gap:12px;padding:8px;border-radius:17px;background:linear-gradient(110deg,rgba(255,255,255,.065),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.07);transition:.25s;transform-style:preserve-3d}
+.subject-row:hover{transform:translate3d(0,-4px,16px) rotateX(2deg);border-color:rgba(53,232,255,.25);box-shadow:0 14px 28px rgba(0,0,0,.25)}
+.subject-row input{padding:12px 13px;border:0;background:rgba(0,0,0,.15);border-radius:12px;color:white;outline:none;min-width:0}.subject-row input:focus{box-shadow:0 0 0 2px rgba(139,92,246,.45)}
+.actions{margin-top:20px;display:flex;gap:12px;align-items:center;transform:translateZ(40px)}
+button{border:0;color:white;font-weight:800;font-size:1rem;padding:14px 24px;border-radius:15px;cursor:pointer;background:linear-gradient(110deg,#06b6d4,#6366f1,#a855f7,#ec4899);background-size:250% 100%;box-shadow:0 13px 30px rgba(99,102,241,.30),inset 0 1px rgba(255,255,255,.28);animation:buttonFlow 4s linear infinite;transition:.2s}
+button:hover{transform:translateY(-3px) translateZ(10px) scale(1.02);box-shadow:0 18px 38px rgba(99,102,241,.4)}
+@keyframes buttonFlow{to{background-position:250% 0}}
+.error{margin-top:14px;color:#fecaca;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);padding:12px 14px;border-radius:13px}
+.result{margin-top:26px;transform:translateZ(50px);animation:resultIn .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes resultIn{from{opacity:0;transform:translateZ(50px) translateY(25px) rotateX(-8deg)}to{opacity:1;transform:translateZ(50px)}}
+.result-top{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:14px}.result-top h3{font-size:1.35rem}.result-top p{color:var(--muted);font-size:.9rem}
+.status{padding:8px 14px;border-radius:999px;font-weight:800;background:rgba(34,197,94,.12);color:#86efac;border:1px solid rgba(34,197,94,.22)}.status.fail{background:rgba(239,68,68,.12);color:#fca5a5;border-color:rgba(239,68,68,.22)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:15px}.stat{position:relative;overflow:hidden;padding:19px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));border:1px solid var(--line);box-shadow:0 15px 35px rgba(0,0,0,.22);transform-style:preserve-3d;transition:.25s}.stat:hover{transform:translateY(-5px) rotateX(4deg) rotateY(-3deg)}.stat:before{content:"";position:absolute;width:90px;height:90px;right:-30px;top:-35px;border-radius:50%;background:rgba(53,232,255,.12);filter:blur(3px)}.stat small{display:block;color:var(--muted);margin-bottom:7px}.stat strong{font-size:1.8rem;letter-spacing:-.04em}
+.table{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.025)}.table-head,.table-row{display:grid;grid-template-columns:1fr 130px;padding:13px 17px;gap:15px}.table-head{color:var(--muted);font-size:.8rem;background:rgba(255,255,255,.035)}.table-row{border-top:1px solid rgba(255,255,255,.07)}.table-row span:last-child{text-align:right;font-weight:700}
+@media(max-width:700px){.page{padding:20px 11px 45px}.card{padding:18px;border-radius:23px}.form-grid{grid-template-columns:1fr}.subject-row{grid-template-columns:1fr 105px}.stats{grid-template-columns:1fr}.card-head{align-items:flex-start}.chip{display:none}.orb.a{left:-35px}.orb.b{right:-25px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}.grid{display:none}}
+</style>
+</head>
+<body>
+<div class="scene"><div class="grid"></div><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+<main class="page"><div class="wrap">
+<header class="top"><h1><span>Student Result</span></h1></header>
+<section class="stage" id="stage"><div class="card" id="tiltCard">
+<div class="card-head"><h2>Enter Student Details</h2><div class="chip">Result Calculator</div></div>
+<form method="POST">
+<div class="form-grid"><div class="field"><label>Student Name</label><input name="student_name" placeholder="Enter student name" required></div></div>
+<div class="subjects">
+{% for i in range(6) %}<div class="subject-row"><input name="subject_name" placeholder="Subject {{ i + 1 }}"><input name="marks" type="number" min="0" max="100" step="0.01" placeholder="Marks"></div>{% endfor %}
+</div>
+<div class="actions"><button type="submit">Create Result</button></div>
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
+</form>
+{% if result %}
+<div class="result">
+<div class="result-top"><div><h3>{{ result.name }}</h3><p>Final Result</p></div><div class="status {% if result.status == 'FAIL' %}fail{% endif %}">{{ result.status }}</div></div>
+<div class="stats"><div class="stat"><small>Total Marks</small><strong>{{ "%.0f"|format(result.total) }}/{{ result.maximum }}</strong></div><div class="stat"><small>Percentage</small><strong>{{ "%.2f"|format(result.percentage) }}%</strong></div><div class="stat"><small>Grade</small><strong>{{ result.grade }}</strong></div></div>
+<div class="table"><div class="table-head"><span>Subject</span><span style="text-align:right">Marks</span></div>{% for subject, mark in result.subjects.items() %}<div class="table-row"><span>{{ subject }}</span><span>{{ "%.2f"|format(mark) }}</span></div>{% endfor %}</div>
+</div>{% endif %}
+</div></section>
+</div></main>
+<script>
+const card=document.getElementById('tiltCard');
+const stage=document.getElementById('stage');
+if(card && stage && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+ stage.addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5;const y=(e.clientY-r.top)/r.height-.5;card.style.transform=`rotateY(${x*5}deg) rotateX(${y*-4}deg) translateZ(0)`});
+ stage.addEventListener('pointerleave',()=>card.style.transform='rotateY(0deg) rotateX(0deg)');
+}
+</script>
+</body>
+</html>
